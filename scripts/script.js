@@ -45,7 +45,6 @@ restartButton.addEventListener('click', () => {
 });
 
 function playGame() {
-    console.log('game started');
     cells.forEach(cell => {
         cell.removeEventListener('click', clickValidCell);
         cell.classList.remove('x');
@@ -57,15 +56,7 @@ function playGame() {
 function clickValidCell(e) {
     const cell = e.target;
     placeMark(cell);
-    if(checkWin()) {
-        displayEnd(false);
-        return;
-    } else {
-        if(checkForDraw()) {
-            displayEnd(true);
-            return;
-        }
-    }
+
     //if two player mode, change turns.
     //if one player mode, let's change turns but then make the CPU pick the next move
     if(playingCPU) {
@@ -79,24 +70,16 @@ function cpuMove() {
     //pick a random cell not occupied
     //fill it
     let randomCell;
+    let draw = checkForDraw();
     do {
         randomCell = cells[Math.floor(Math.random() * cells.length)];
         console.log('picked a random cell');
         console.log(randomCell);
-    } while(randomCell.classList.contains('x') || randomCell.classList.contains('circle'));
-    console.log('about to place mark on the random cell');
+    } while((randomCell.classList.contains('x') || randomCell.classList.contains('circle')) && !draw);
     changeTurns();
-    placeMark(randomCell);
-    if(checkWin()) {
-        displayEnd(false);
-        return;
-    } else {
-        if(checkForDraw()) {
-            displayEnd(true);
-            return;
-        }
+    if(!draw) {
+        placeMark(randomCell);
     }
-    
 }
 
 function changeTurns() {
@@ -106,8 +89,17 @@ function changeTurns() {
 function placeMark(cell) {
     if(xTurn) {
         cell.classList.add('x');
+        console.log('placed an x');
     } else {
         cell.classList.add('circle');
+        console.log('placed a circle');
+    }
+    if(checkWin()) {
+        displayEnd(false);
+    } else {
+        if(checkForDraw()) {
+            displayEnd(true);
+        }
     }
 }
 
