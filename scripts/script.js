@@ -5,7 +5,7 @@ const board = document.querySelector('[data-board]');
 const cells = Array.from(document.querySelectorAll('[data-cell]'));
 const xWinsCounter = document.querySelector('[data-x-wins]');
 const oWinsCounter = document.querySelector('[data-o-wins]');
-
+const toggleButton = document.querySelector('[data-toggle-button]');
 
 const winningCombinations = [
     [0, 1, 2],
@@ -19,11 +19,24 @@ const winningCombinations = [
 ];
 
 let xTurn = true;
+let playingCPU = true;
 
 let xWins = 0;
 let oWins = 0;
 
 playGame();
+
+toggleButton.addEventListener('click', () => {
+    if(playingCPU) {
+        toggleButton.innerText = 'Player vs. Player';
+    } else {
+        toggleButton.innerText = 'Player vs. CPU';
+    }
+    playingCPU = !playingCPU;
+    playGame();
+    xWins = 0;
+    oWins = 0;
+});
 
 restartButton.addEventListener('click', () => {
     overlay.classList.remove('active');
@@ -32,6 +45,7 @@ restartButton.addEventListener('click', () => {
 });
 
 function playGame() {
+    console.log('game started');
     cells.forEach(cell => {
         cell.removeEventListener('click', clickValidCell);
         cell.classList.remove('x');
@@ -44,12 +58,45 @@ function clickValidCell(e) {
     const cell = e.target;
     placeMark(cell);
     if(checkWin()) {
-        displayEnd();
+        displayEnd(false);
+        return;
+    } else {
+        if(checkForDraw()) {
+            displayEnd(true);
+            return;
+        }
     }
-    if(checkForDraw()) {
-        displayEnd();
+    //if two player mode, change turns.
+    //if one player mode, let's change turns but then make the CPU pick the next move
+    if(playingCPU) {
+        cpuMove();
     }
     changeTurns();
+    
+}
+
+function cpuMove() {
+    //pick a random cell not occupied
+    //fill it
+    let randomCell;
+    do {
+        randomCell = cells[Math.floor(Math.random() * cells.length)];
+        console.log('picked a random cell');
+        console.log(randomCell);
+    } while(randomCell.classList.contains('x') || randomCell.classList.contains('circle'));
+    console.log('about to place mark on the random cell');
+    changeTurns();
+    placeMark(randomCell);
+    if(checkWin()) {
+        displayEnd(false);
+        return;
+    } else {
+        if(checkForDraw()) {
+            displayEnd(true);
+            return;
+        }
+    }
+    
 }
 
 function changeTurns() {
@@ -65,7 +112,6 @@ function placeMark(cell) {
 }
 
 function checkWin() {
-    
     let currentClass;
     xTurn ? currentClass = 'x' : currentClass = 'circle';
 
@@ -79,11 +125,11 @@ function checkWin() {
 function checkForDraw() {
     return cells.every(cell => {
         return cell.classList.contains('x') || cell.classList.contains('circle');
-    })
+    });
 }
 
-function displayEnd() {
-    if(checkForDraw()) {
+function displayEnd(tie) {
+    if(tie) {
         winningMessage.innerText = 'It\'s A Tie!';
     } else {
         if(xTurn) {
