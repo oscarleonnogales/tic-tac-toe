@@ -1,0 +1,160 @@
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+:root {
+    --cell-size: 120px;
+    --mark-size: calc(var(--cell-size) * 0.85);
+}
+
+body {
+    background: linear-gradient(#24a2b3, #22d47b);
+    background-repeat: no-repeat;
+}
+
+.board {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(3, var(--cell-size));
+    grid-template-rows: repeat(3, var(--cell-size));
+    justify-content: center;
+    margin-top: 200px;
+}
+
+.cell {
+    border: 1px solid white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cell:first-child,
+.cell:nth-child(2),
+.cell:nth-child(3) {
+    border-top: none;
+}
+
+.cell:nth-child(3),
+.cell:nth-child(6),
+.cell:nth-child(9) {
+    border-right: none;
+}
+
+.cell:first-child,
+.cell:nth-child(4),
+.cell:nth-child(7) {
+    border-left: none;
+}
+
+.cell:nth-child(7),
+.cell:nth-child(8),
+.cell:nth-child(9) {
+    border-bottom: none;
+}
+
+.overlay {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.75);
+    transform: scale(0);
+    transition: 200ms ease-in-out;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+}
+
+.overlay.active {
+    transform: scale(1);
+}
+
+.cell.x::before,
+.cell.x::after {
+    content: '';
+    height: var(--mark-size);
+    width: 15px;
+    background-color: white;
+    position: absolute;
+}
+
+.cell.x::before {
+    transform: rotate(45deg);
+}
+
+.cell.x::after {
+    transform: rotate(-45deg);
+}
+
+.cell.circle::before,
+.cell.circle::after {
+    content: '';
+    height: calc(var(--mark-size) * 0.9);
+    width: calc(var(--mark-size) * 0.9);
+    background: transparent;
+    position: absolute;
+    border: 15px solid white;
+    border-radius: 50%;
+}
+
+.cell.x,
+.cell.circle {
+    cursor: not-allowed;
+}
+
+.winning-message {
+    color: white;
+    font-weight: bold;
+    font-size: 3rem;
+}
+
+.restart-button {
+    color: white;
+    background-color: black;
+    padding: 10px;
+    cursor: pointer;
+    border: 2px solid white;
+    border-radius: 3px;
+    font-size: 2rem;
+    margin: 20px;
+}
+
+.restart-button:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+}
+
+h1 {
+    color: white;
+    font-size: 4rem;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.player-container {
+    color: white;
+    font-size: 2rem;
+}
+
+.player-container p {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+#x-container {
+    position: absolute;
+    top: 420px;
+    left: 100px;
+}
+
+#o-container {
+    position: absolute;
+    top: 420px;
+    right: 100px;
+}
