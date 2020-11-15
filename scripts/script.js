@@ -73,8 +73,6 @@ function cpuMove() {
     let draw = checkForDraw();
     do {
         randomCell = cells[Math.floor(Math.random() * cells.length)];
-        console.log('picked a random cell');
-        console.log(randomCell);
     } while((randomCell.classList.contains('x') || randomCell.classList.contains('circle')) && !draw);
     changeTurns();
     if(!draw) {
@@ -89,10 +87,8 @@ function changeTurns() {
 function placeMark(cell) {
     if(xTurn) {
         cell.classList.add('x');
-        console.log('placed an x');
     } else {
         cell.classList.add('circle');
-        console.log('placed a circle');
     }
     if(checkWin()) {
         displayEnd(false);
